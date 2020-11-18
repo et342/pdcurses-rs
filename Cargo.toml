@@ -1,0 +1,23 @@
+[package]
+name = "pdcurses"
+version = "0.0.0"
+authors = ["et342"]
+edition = "2018"
+repository = "https://github.com/et342/pdcurses-rs"
+description = "A Rust bindings for PDCurses"
+license = "The Unlicense"
+categories = ["external-ffi-bindings", "command-line-interface"]
+keywords = ["windows", "console", "tui", "terminal", "curses"]
+readme = "README.md"
+links = "pdcurses"
+
+[features]
+debug = [] # Enable debugging facilities within PDCurses.
+force_utf8 = [] # Force PDCurses to treat byte strings as UTF-8. PDCurses will rely on the current locale otherwise.
+ncurses_compat = [] # Provide ncurses-rs compatibility APIs
+
+[dependencies]
+libc = "0.2.80"
+
+[build-dependencies]
+cc = "1.0.62"
