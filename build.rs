@@ -1,3 +1,4 @@
+#![cfg_attr(not(windows), allow(dead_code))]
 
 const PDCLIB_FILES: &[&str] = &[
     "PDCurses/pdcurses/addch.c",
