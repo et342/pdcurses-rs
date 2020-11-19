@@ -77,7 +77,7 @@ fn build() {
         .extra_warnings(false)
         .define("PDC_RGB", None)
         .define("PDC_WIDE", None)
-        .include("pdcurses")
+        .include("PDCurses")
         .files(PDCLIB_FILES)
         .files(WINCON_FILES)
         .compile("pdcurses");
