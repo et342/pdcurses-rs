@@ -56,7 +56,7 @@ fn main() {
     println!("cargo:rerun-if-changed=PDCurses");
     println!("cargo:rerun-if-changed=build.rs");
 
-    #[cfg(not(doc))] {
+    #[cfg(all(not(doc), windows))] {
         build();
     }
 }
