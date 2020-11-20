@@ -73,9 +73,6 @@ pub use sys::{
     MOUSE_WHEEL_LEFT,
     MOUSE_WHEEL_RIGHT,
 
-    WINDOW,
-    SCREEN,
-
     PDC_PAIR,
 
     attribute_constants,
@@ -245,6 +242,12 @@ mod ncurses_compat {
     pub const fn WA_ATTRIBUTES() -> chtype { sys::WA_ATTRIBUTES }
 }
 
+/// Handle to a `WINDOW` structure.
+pub type WINDOW = *mut sys::WINDOW;
+/// Handle to a `SCREEN` structure.
+pub type SCREEN = *mut sys::SCREEN;
+
+
 pub fn LINES() -> i32 {
     unsafe { sys::LINES }
 }
@@ -253,15 +256,15 @@ pub fn COLS() -> i32 {
     unsafe { sys::COLS }
 }
 
-pub fn stdscr() -> *mut WINDOW {
+pub fn stdscr() -> WINDOW {
     unsafe { sys::stdscr }
 }
 
-pub fn curscr() -> *mut WINDOW {
+pub fn curscr() -> WINDOW {
     unsafe { sys::curscr }
 }
 
-pub fn SP() -> *mut SCREEN {
+pub fn SP() -> SCREEN {
     unsafe { sys::SP }
 }
 
@@ -367,7 +370,7 @@ pub fn border(
     unsafe { sys::border(ls, rs, ts, bs, tl, tr, bl, br) }
 }
 
-pub fn box_(win: *mut WINDOW, verch: chtype, horch: chtype) -> i32 {
+pub fn box_(win: WINDOW, verch: chtype, horch: chtype) -> i32 {
     unsafe { sys::box_(win, verch, horch) }
 }
 
@@ -383,7 +386,7 @@ pub fn chgat(n: i32, attrs: attr_t, color_pair: i16) -> i32 {
     unsafe { sys::chgat(n, attrs, color_pair, std::ptr::null()) }
 }
 
-pub fn clearok(win: *mut WINDOW, flag: bool) -> i32 {
+pub fn clearok(win: WINDOW, flag: bool) -> i32 {
     unsafe { sys::clearok(win, flag) }
 }
 
@@ -412,8 +415,8 @@ pub fn COLOR_PAIR(n: i16) -> attr_t {
 }
 
 pub fn copywin(
-    src: *const WINDOW,
-    dst: *mut WINDOW,
+    src: WINDOW,
+    dst: WINDOW,
     src_tr: i32,
     src_tc: i32,
     dst_tr: i32,
@@ -457,15 +460,15 @@ pub fn deleteln() -> i32 {
     unsafe { sys::deleteln() }
 }
 
-pub fn delscreen(scr: *mut SCREEN) {
+pub fn delscreen(scr: SCREEN) {
     unsafe { sys::delscreen(scr) }
 }
 
-pub fn delwin(win: *mut WINDOW) -> i32 {
+pub fn delwin(win: WINDOW) -> i32 {
     unsafe { sys::delwin(win) }
 }
 
-pub fn derwin(win: *mut WINDOW, nlines: i32, ncols: i32, begy: i32, begx: i32) -> *mut WINDOW {
+pub fn derwin(win: WINDOW, nlines: i32, ncols: i32, begy: i32, begx: i32) -> WINDOW {
     unsafe { sys::derwin(win, nlines, ncols, begy, begx) }
 }
 
@@ -473,7 +476,7 @@ pub fn doupdate() -> i32 {
     unsafe { sys::doupdate() }
 }
 
-pub fn dupwin(win: *mut WINDOW) -> *mut WINDOW {
+pub fn dupwin(win: WINDOW) -> WINDOW {
     unsafe { sys::dupwin(win) }
 }
 
@@ -509,7 +512,7 @@ pub fn flushinp() -> i32 {
     unsafe { sys::flushinp() }
 }
 
-pub fn getbkgd(win: *mut WINDOW) -> chtype {
+pub fn getbkgd(win: WINDOW) -> chtype {
     unsafe { sys::getbkgd(win) }
 }
 
@@ -525,7 +528,7 @@ pub fn getch() -> i32 {
 //     unsafe { sys::getstr() }
 // }
 
-pub fn getwin(filep: *mut FILE) -> *mut WINDOW {
+pub fn getwin(filep: *mut FILE) -> WINDOW {
     unsafe { sys::getwin(filep) }
 }
 
@@ -549,15 +552,15 @@ pub fn hline(ch: chtype, n: i32) -> i32 {
     unsafe { sys::hline(ch, n) }
 }
 
-pub fn idcok(win: *mut WINDOW, flag: bool) {
+pub fn idcok(win: WINDOW, flag: bool) {
     unsafe { sys::idcok(win, flag) }
 }
 
-pub fn idlok(win: *mut WINDOW, flag: bool) -> i32 {
+pub fn idlok(win: WINDOW, flag: bool) -> i32 {
     unsafe { sys::idlok(win, flag) }
 }
 
-pub fn immedok(win: *mut WINDOW, flag: bool) {
+pub fn immedok(win: WINDOW, flag: bool) {
     unsafe { sys::immedok(win, flag) }
 }
 
@@ -577,7 +580,7 @@ pub fn init_pair(color_pair: i16, fg: i16, bg: i16) -> i32 {
     unsafe { sys::init_pair(color_pair, fg, bg) }
 }
 
-pub fn initscr() -> *mut WINDOW {
+pub fn initscr() -> WINDOW {
     unsafe { sys::initscr() }
 }
 
@@ -607,7 +610,7 @@ pub fn insstr(s: &str) -> i32 {
 // TODO
 // pub fn instr(str: *mut c_char) -> i32;
 
-pub fn intrflush(win: *mut WINDOW, flag: bool) -> i32 {
+pub fn intrflush(win: WINDOW, flag: bool) -> i32 {
     unsafe { sys::intrflush(win, flag) }
 }
 
@@ -615,11 +618,11 @@ pub fn isendwin() -> bool {
     unsafe { sys::isendwin() }
 }
 
-pub fn is_linetouched(win: *mut WINDOW, line: i32) -> bool {
+pub fn is_linetouched(win: WINDOW, line: i32) -> bool {
     unsafe { sys::is_linetouched(win, line) }
 }
 
-pub fn is_wintouched(win: *mut WINDOW) -> bool {
+pub fn is_wintouched(win: WINDOW) -> bool {
     unsafe { sys::is_wintouched(win) }
 }
 
@@ -628,7 +631,7 @@ pub fn keyname(c: i32) -> &'static str {
     s.to_str().unwrap()
 }
 
-pub fn keypad(win: *mut WINDOW, flag: bool) -> i32 {
+pub fn keypad(win: WINDOW, flag: bool) -> i32 {
     unsafe { sys::keypad(win, flag) }
 }
 
@@ -636,7 +639,7 @@ pub fn killchar() -> u8 {
     unsafe { sys::killchar() as u8 }
 }
 
-pub fn leaveok(win: *mut WINDOW, flag: bool) -> i32 {
+pub fn leaveok(win: WINDOW, flag: bool) -> i32 {
     unsafe { sys::leaveok(win, flag) }
 }
 
@@ -650,7 +653,7 @@ pub fn longname() -> Option<&'static str> {
     }
 }
 
-pub fn meta(win: *mut WINDOW, flag: bool) -> i32 {
+pub fn meta(win: WINDOW, flag: bool) -> i32 {
     unsafe { sys::meta(win, flag) }
 }
 
@@ -695,7 +698,7 @@ pub fn mvdelch(y: i32, x: i32) -> i32 {
     unsafe { sys::mvdelch(y, x) }
 }
 
-pub fn mvderwin(win: *mut WINDOW, pary: i32, parx: i32) -> i32 {
+pub fn mvderwin(win: WINDOW, pary: i32, parx: i32) -> i32 {
     unsafe { sys::mvderwin(win, pary, parx) }
 }
 
@@ -759,81 +762,81 @@ pub fn mvvline(y: i32, x: i32, ch: chtype, n: i32) -> i32 {
     unsafe { sys::mvvline(y, x, ch, n) }
 }
 
-// pub fn mvwaddchnstr(win: *mut WINDOW, y: i32, x: i32, ch: &[chtype], n: usize) -> i32 {
+// pub fn mvwaddchnstr(win: WINDOW, y: i32, x: i32, ch: &[chtype], n: usize) -> i32 {
 //     mvwaddchstr(win, y, x, &ch[..n])
 // }
 
-pub fn mvwaddchstr(win: *mut WINDOW, y: i32, x: i32, ch: &[chtype]) -> i32 {
+pub fn mvwaddchstr(win: WINDOW, y: i32, x: i32, ch: &[chtype]) -> i32 {
     unsafe { sys::mvwaddchstr(win, y, x, chstr(ch).as_ptr()) }
 }
 
-pub fn mvwaddch(win: *mut WINDOW, y: i32, x: i32, ch: chtype) -> i32 {
+pub fn mvwaddch(win: WINDOW, y: i32, x: i32, ch: chtype) -> i32 {
     unsafe { sys::mvwaddch(win, y, x, ch) }
 }
 
-// pub fn mvwaddnstr(win: *mut WINDOW, y: i32, x: i32, s: &str, n: usize) -> i32 {
+// pub fn mvwaddnstr(win: WINDOW, y: i32, x: i32, s: &str, n: usize) -> i32 {
 //     mvwaddstr(win, y, x, &s[..n])
 // }
 
-pub fn mvwaddstr(win: *mut WINDOW, y: i32, x: i32, s: &str) -> i32 {
+pub fn mvwaddstr(win: WINDOW, y: i32, x: i32, s: &str) -> i32 {
     unsafe { sys::mvwaddstr(win, y, x, cstr(s).as_ptr()) }
 }
 
-pub fn mvwchgat(win: *mut WINDOW, y: i32, x: i32, n: i32, attrs: attr_t, color_pair: i16) -> i32 {
+pub fn mvwchgat(win: WINDOW, y: i32, x: i32, n: i32, attrs: attr_t, color_pair: i16) -> i32 {
     unsafe { sys::mvwchgat(win, y, x, n, attrs, color_pair, std::ptr::null()) }
 }
 
-pub fn mvwdelch(win: *mut WINDOW, y: i32, x: i32) -> i32 {
+pub fn mvwdelch(win: WINDOW, y: i32, x: i32) -> i32 {
     unsafe { sys::mvwdelch(win, y, x) }
 }
 
-pub fn mvwgetch(win: *mut WINDOW, y: i32, x: i32) -> i32 {
+pub fn mvwgetch(win: WINDOW, y: i32, x: i32) -> i32 {
     unsafe { sys::mvwgetch(win, y, x) }
 }
 
 // TODO
-// pub fn mvwgetnstr      (win: *mut WINDOW, y: i32, x: i32, str: *mut c_char, n: i32) -> i32;
-// pub fn mvwgetstr       (win: *mut WINDOW, y: i32, x: i32, str: *mut c_char) -> i32;
+// pub fn mvwgetnstr      (win: WINDOW, y: i32, x: i32, str: *mut c_char, n: i32) -> i32;
+// pub fn mvwgetstr       (win: WINDOW, y: i32, x: i32, str: *mut c_char) -> i32;
 
-pub fn mvwhline(win: *mut WINDOW, y: i32, x: i32, ch: chtype, n: i32) -> i32 {
+pub fn mvwhline(win: WINDOW, y: i32, x: i32, ch: chtype, n: i32) -> i32 {
     unsafe { sys::mvwhline(win, y, x, ch, n) }
 }
 
 // TODO
-// pub fn mvwinchnstr     (win: *mut WINDOW, y: i32, x: i32, ch: *mut chtype, n: i32) -> i32;
-// pub fn mvwinchstr      (win: *mut WINDOW, y: i32, x: i32, ch: *mut chtype) -> i32;
+// pub fn mvwinchnstr     (win: WINDOW, y: i32, x: i32, ch: *mut chtype, n: i32) -> i32;
+// pub fn mvwinchstr      (win: WINDOW, y: i32, x: i32, ch: *mut chtype) -> i32;
 
-pub fn mvwinch(win: *mut WINDOW, y: i32, x: i32) -> chtype {
+pub fn mvwinch(win: WINDOW, y: i32, x: i32) -> chtype {
     unsafe { sys::mvwinch(win, y, x) }
 }
 
 // TODO
-// pub fn mvwinnstr(win: *mut WINDOW, y: i32, x: i32, str: *mut c_char, n: i32) -> i32;
+// pub fn mvwinnstr(win: WINDOW, y: i32, x: i32, str: *mut c_char, n: i32) -> i32;
 
-pub fn mvwinsch(win: *mut WINDOW, y: i32, x: i32, ch: chtype) -> i32 {
+pub fn mvwinsch(win: WINDOW, y: i32, x: i32, ch: chtype) -> i32 {
     unsafe { sys::mvwinsch(win, y, x, ch) }
 }
 
-// pub fn mvwinsnstr(win: *mut WINDOW, y: i32, x: i32, s: &str, n: usize) -> i32 {
+// pub fn mvwinsnstr(win: WINDOW, y: i32, x: i32, s: &str, n: usize) -> i32 {
 //     mvwinsstr(win, y, x, &s[..n])
 // }
 
-pub fn mvwinsstr(win: *mut WINDOW, y: i32, x: i32, s: &str) -> i32 {
+pub fn mvwinsstr(win: WINDOW, y: i32, x: i32, s: &str) -> i32 {
     unsafe { sys::mvwinsstr(win, y, x, cstr(s).as_ptr()) }
 }
 
 // TODO
-// pub fn mvwinstr(win: *mut WINDOW, y: i32, x: i32, str: *mut c_char) -> i32;
+// pub fn mvwinstr(win: WINDOW, y: i32, x: i32, str: *mut c_char) -> i32;
 
-pub fn mvwin(win: *mut WINDOW, y: i32, x: i32) -> i32 {
+pub fn mvwin(win: WINDOW, y: i32, x: i32) -> i32 {
     unsafe { sys::mvwin(win, y, x) }
 }
 
 // TODO: C variadic
-// pub fn mvwprintw(win: *mut WINDOW, y: i32, x: i32, fmt: *const c_char, ...) -> i32;
-// pub fn mvwscanw (win: *mut WINDOW, y: i32, x: i32, fmt: *const c_char, ...) -> i32;
+// pub fn mvwprintw(win: WINDOW, y: i32, x: i32, fmt: *const c_char, ...) -> i32;
+// pub fn mvwscanw (win: WINDOW, y: i32, x: i32, fmt: *const c_char, ...) -> i32;
 
-pub fn mvwvline(win: *mut WINDOW, y: i32, x: i32, ch: chtype, n: i32) -> i32 {
+pub fn mvwvline(win: WINDOW, y: i32, x: i32, ch: chtype, n: i32) -> i32 {
     unsafe { sys::mvwvline(win, y, x, ch, n) }
 }
 
@@ -841,17 +844,17 @@ pub fn napms(ms: i32) -> i32 {
     unsafe { sys::napms(ms) }
 }
 
-pub fn newpad(nlines: i32, ncols: i32) -> *mut WINDOW {
+pub fn newpad(nlines: i32, ncols: i32) -> WINDOW {
     unsafe { sys::newpad(nlines, ncols) }
 }
 
-pub fn newterm(termtype: Option<&str>, outfd: *mut FILE, infd: *mut FILE) -> *mut SCREEN {
+pub fn newterm(termtype: Option<&str>, outfd: *mut FILE, infd: *mut FILE) -> SCREEN {
     let ty = termtype.map(cstr);
     let ty_ptr = ty.as_ref().map(|s| s.as_ptr()).unwrap_or(std::ptr::null());
     unsafe { sys::newterm(ty_ptr, outfd, infd) }
 }
 
-pub fn newwin(nlines: i32, ncols: i32, begy: i32, begx: i32) -> *mut WINDOW {
+pub fn newwin(nlines: i32, ncols: i32, begy: i32, begx: i32) -> WINDOW {
     unsafe { sys::newwin(nlines, ncols, begy, begx) }
 }
 
@@ -863,7 +866,7 @@ pub fn nocbreak() -> i32 {
     unsafe { sys::nocbreak() }
 }
 
-pub fn nodelay(win: *mut WINDOW, flag: bool) -> i32 {
+pub fn nodelay(win: WINDOW, flag: bool) -> i32 {
     unsafe { sys::nodelay(win, flag) }
 }
 
@@ -883,15 +886,15 @@ pub fn noraw() -> i32 {
     unsafe { sys::noraw() }
 }
 
-pub fn notimeout(win: *mut WINDOW, flag: bool) -> i32 {
+pub fn notimeout(win: WINDOW, flag: bool) -> i32 {
     unsafe { sys::notimeout(win, flag) }
 }
 
-pub fn overlay(src: *const WINDOW, dst: *mut WINDOW) -> i32 {
+pub fn overlay(src: WINDOW, dst: WINDOW) -> i32 {
     unsafe { sys::overlay(src, dst) }
 }
 
-pub fn overwrite(src: *const WINDOW, dst: *mut WINDOW) -> i32 {
+pub fn overwrite(src: WINDOW, dst: WINDOW) -> i32 {
     unsafe { sys::overwrite(src, dst) }
 }
 
@@ -903,22 +906,22 @@ pub fn PAIR_NUMBER(n: attr_t) -> i16 {
     unsafe { sys::PAIR_NUMBER(n) }
 }
 
-pub fn pechochar(win: *mut WINDOW, ch: chtype) -> i32 {
+pub fn pechochar(win: WINDOW, ch: chtype) -> i32 {
     unsafe { sys::pechochar(win, ch) }
 }
 
-pub fn pnoutrefresh(win: *mut WINDOW, py: i32, px: i32, sy1: i32, sx1: i32, sy2: i32, sx2: i32) -> i32 {
+pub fn pnoutrefresh(win: WINDOW, py: i32, px: i32, sy1: i32, sx1: i32, sy2: i32, sx2: i32) -> i32 {
     unsafe { sys::pnoutrefresh(win, py, px, sy1, sx1, sy2, sx2) }
 }
 
-pub fn prefresh(win: *mut WINDOW, py: i32, px: i32, sy1: i32, sx1: i32, sy2: i32, sx2: i32) -> i32 {
+pub fn prefresh(win: WINDOW, py: i32, px: i32, sy1: i32, sx1: i32, sy2: i32, sx2: i32) -> i32 {
     unsafe { sys::prefresh(win, py, px, sy1, sx1, sy2, sx2) }
 }
 
 // TODO: C variadic
 // pub fn printw(fmt: *const c_char, ...) -> i32;
 
-pub fn putwin(win: *mut WINDOW, filep: *mut FILE) -> i32 {
+pub fn putwin(win: WINDOW, filep: *mut FILE) -> i32 {
     unsafe { sys::putwin(win, filep) }
 }
 
@@ -930,7 +933,7 @@ pub fn raw() -> i32 {
     unsafe { sys::raw() }
 }
 
-pub fn redrawwin(win: *mut WINDOW) -> i32 {
+pub fn redrawwin(win: WINDOW) -> i32 {
     unsafe { sys::redrawwin(win) }
 }
 
@@ -950,7 +953,7 @@ pub fn resetty() -> i32 {
     unsafe { sys::resetty() }
 }
 
-pub fn ripoffline(line: i32, init: Option<unsafe extern "C" fn(win: *mut WINDOW, ncols: i32) -> i32>) -> i32 {
+pub fn ripoffline(line: i32, init: Option<unsafe extern "C" fn(win: WINDOW, ncols: i32) -> i32>) -> i32 {
     unsafe { sys::ripoffline(line, init) }
 }
 
@@ -981,15 +984,15 @@ pub fn scrl(n: i32) -> i32 {
     unsafe { sys::scrl(n) }
 }
 
-pub fn scroll(win: *mut WINDOW) -> i32 {
+pub fn scroll(win: WINDOW) -> i32 {
     unsafe { sys::scroll(win) }
 }
 
-pub fn scrollok(win: *mut WINDOW, flag: bool) -> i32 {
+pub fn scrollok(win: WINDOW, flag: bool) -> i32 {
     unsafe { sys::scrollok(win, flag) }
 }
 
-pub fn set_term(new: *mut SCREEN) -> *mut SCREEN {
+pub fn set_term(new: SCREEN) -> SCREEN {
     unsafe { sys::set_term(new) }
 }
 
@@ -1070,15 +1073,15 @@ pub fn start_color() -> i32 {
     unsafe { sys::start_color() }
 }
 
-pub fn subpad(orig: *mut WINDOW, nlines: i32, ncols: i32, begy: i32, begx: i32) -> *mut WINDOW {
+pub fn subpad(orig: WINDOW, nlines: i32, ncols: i32, begy: i32, begx: i32) -> WINDOW {
     unsafe { sys::subpad(orig, nlines, ncols, begy, begx) }
 }
 
-pub fn subwin(orig: *mut WINDOW, nlines: i32, ncols: i32, begy: i32, begx: i32) -> *mut WINDOW {
+pub fn subwin(orig: WINDOW, nlines: i32, ncols: i32, begy: i32, begx: i32) -> WINDOW {
     unsafe { sys::subwin(orig, nlines, ncols, begy, begx) }
 }
 
-pub fn syncok(win: *mut WINDOW, flag: bool) -> i32 {
+pub fn syncok(win: WINDOW, flag: bool) -> i32 {
     unsafe { sys::syncok(win, flag) }
 }
 
@@ -1099,11 +1102,11 @@ pub fn timeout(delay: i32) {
     unsafe { sys::timeout(delay) }
 }
 
-pub fn touchline(win: *mut WINDOW, start: i32, count: i32) -> i32 {
+pub fn touchline(win: WINDOW, start: i32, count: i32) -> i32 {
     unsafe { sys::touchline(win, start, count) }
 }
 
-pub fn touchwin(win: *mut WINDOW) -> i32 {
+pub fn touchwin(win: WINDOW) -> i32 {
     unsafe { sys::touchwin(win) }
 }
 
@@ -1115,7 +1118,7 @@ pub fn ungetch(ch: i32) -> i32 {
     unsafe { sys::ungetch(ch) }
 }
 
-pub fn untouchwin(win: *mut WINDOW) -> i32 {
+pub fn untouchwin(win: WINDOW) -> i32 {
     unsafe { sys::untouchwin(win) }
 }
 
@@ -1135,69 +1138,69 @@ pub fn use_env(flag: bool) {
  }
 
 // TODO: C va_list
-// pub fn vw_printw (win: *mut WINDOW, fmt: *const c_char, varglist: va_list) -> i32;
-// pub fn vwprintw  (win: *mut WINDOW, fmt: *const c_char, varglist: va_list) -> i32;
-// pub fn vw_scanw  (win: *mut WINDOW, fmt: *const c_char, varglist: va_list) -> i32;
-// pub fn vwscanw   (win: *mut WINDOW, fmt: *const c_char, varglist: va_list) -> i32;
+// pub fn vw_printw (win: WINDOW, fmt: *const c_char, varglist: va_list) -> i32;
+// pub fn vwprintw  (win: WINDOW, fmt: *const c_char, varglist: va_list) -> i32;
+// pub fn vw_scanw  (win: WINDOW, fmt: *const c_char, varglist: va_list) -> i32;
+// pub fn vwscanw   (win: WINDOW, fmt: *const c_char, varglist: va_list) -> i32;
 
-// pub fn waddchnstr(win: *mut WINDOW, ch: &[chtype], n: usize) -> i32 {
+// pub fn waddchnstr(win: WINDOW, ch: &[chtype], n: usize) -> i32 {
 //     waddchstr(win, &ch[..n])
 // }
 
-pub fn waddchstr(win: *mut WINDOW, ch: &[chtype]) -> i32 {
+pub fn waddchstr(win: WINDOW, ch: &[chtype]) -> i32 {
     unsafe { sys::waddchstr(win, chstr(ch).as_ptr()) }
 }
 
-pub fn waddch(win: *mut WINDOW, ch: chtype) -> i32 {
+pub fn waddch(win: WINDOW, ch: chtype) -> i32 {
     unsafe { sys::waddch(win, ch) }
 }
 
-// pub fn waddnstr(win: *mut WINDOW, s: &str, n: usize) -> i32 {
+// pub fn waddnstr(win: WINDOW, s: &str, n: usize) -> i32 {
 //     waddstr(win, &s[..n])
 // }
 
-pub fn waddstr(win: *mut WINDOW, s: &str) -> i32 {
+pub fn waddstr(win: WINDOW, s: &str) -> i32 {
     unsafe { sys::waddstr(win, cstr(s).as_ptr()) }
 }
 
-pub fn wattroff(win: *mut WINDOW, attrs: chtype) -> i32 {
+pub fn wattroff(win: WINDOW, attrs: chtype) -> i32 {
     unsafe { sys::wattroff(win, attrs) }
 }
 
-pub fn wattron(win: *mut WINDOW, attrs: chtype) -> i32 {
+pub fn wattron(win: WINDOW, attrs: chtype) -> i32 {
     unsafe { sys::wattron(win, attrs) }
 }
 
-pub fn wattrset(win: *mut WINDOW, attrs: chtype) -> i32 {
+pub fn wattrset(win: WINDOW, attrs: chtype) -> i32 {
     unsafe { sys::wattrset(win, attrs) }
 }
 
-pub fn wattr_get(win: *mut WINDOW, attrs: &mut attr_t, color_pair: &mut i16) -> i32 {
+pub fn wattr_get(win: WINDOW, attrs: &mut attr_t, color_pair: &mut i16) -> i32 {
     unsafe { sys::wattr_get(win, attrs, color_pair, std::ptr::null_mut()) }
 }
 
-pub fn wattr_off(win: *mut WINDOW, attrs: attr_t) -> i32 {
+pub fn wattr_off(win: WINDOW, attrs: attr_t) -> i32 {
     unsafe { sys::wattr_off(win, attrs, std::ptr::null_mut()) }
 }
 
-pub fn wattr_on(win: *mut WINDOW, attrs: attr_t) -> i32 {
+pub fn wattr_on(win: WINDOW, attrs: attr_t) -> i32 {
     unsafe { sys::wattr_on(win, attrs, std::ptr::null_mut()) }
 }
 
-pub fn wattr_set(win: *mut WINDOW, attrs: attr_t, color_pair: i16) -> i32 {
+pub fn wattr_set(win: WINDOW, attrs: attr_t, color_pair: i16) -> i32 {
     unsafe { sys::wattr_set(win, attrs, color_pair, std::ptr::null_mut()) }
 }
 
-pub fn wbkgdset(win: *mut WINDOW, ch: chtype) {
+pub fn wbkgdset(win: WINDOW, ch: chtype) {
     unsafe { sys::wbkgdset(win, ch) }
 }
 
-pub fn wbkgd(win: *mut WINDOW, ch: chtype) -> i32 {
+pub fn wbkgd(win: WINDOW, ch: chtype) -> i32 {
     unsafe { sys::wbkgd(win, ch) }
 }
 
 pub fn wborder(
-    win: *mut WINDOW,
+    win: WINDOW,
     ls: chtype,
     rs: chtype,
     ts: chtype,
@@ -1210,151 +1213,151 @@ pub fn wborder(
     unsafe { sys::wborder(win, ls, rs, ts, bs, tl, tr, bl, br) }
 }
 
-pub fn wchgat(win: *mut WINDOW, n: i32, attrs: attr_t, color_pair: i16) -> i32 {
+pub fn wchgat(win: WINDOW, n: i32, attrs: attr_t, color_pair: i16) -> i32 {
     unsafe { sys::wchgat(win, n, attrs, color_pair, std::ptr::null_mut()) }
 }
 
-pub fn wclear(win: *mut WINDOW) -> i32 {
+pub fn wclear(win: WINDOW) -> i32 {
     unsafe { sys::wclear(win) }
 }
 
-pub fn wclrtobot(win: *mut WINDOW) -> i32 {
+pub fn wclrtobot(win: WINDOW) -> i32 {
     unsafe { sys::wclrtobot(win) }
 }
 
-pub fn wclrtoeol(win: *mut WINDOW) -> i32 {
+pub fn wclrtoeol(win: WINDOW) -> i32 {
     unsafe { sys::wclrtoeol(win) }
 }
 
-pub fn wcolor_set(win: *mut WINDOW, color: i16) -> i32 {
+pub fn wcolor_set(win: WINDOW, color: i16) -> i32 {
     unsafe { sys::wcolor_set(win, color, std::ptr::null_mut()) }
 }
 
-pub fn wcursyncup(win: *mut WINDOW) {
+pub fn wcursyncup(win: WINDOW) {
     unsafe { sys::wcursyncup(win) }
 }
 
-pub fn wdelch(win: *mut WINDOW) -> i32 {
+pub fn wdelch(win: WINDOW) -> i32 {
     unsafe { sys::wdelch(win) }
 }
 
-pub fn wdeleteln(win: *mut WINDOW) -> i32 {
+pub fn wdeleteln(win: WINDOW) -> i32 {
     unsafe { sys::wdeleteln(win) }
 }
 
-pub fn wechochar(win: *mut WINDOW, ch: chtype) -> i32 {
+pub fn wechochar(win: WINDOW, ch: chtype) -> i32 {
     unsafe { sys::wechochar(win, ch) }
 }
 
-pub fn werase(win: *mut WINDOW) -> i32 {
+pub fn werase(win: WINDOW) -> i32 {
     unsafe { sys::werase(win) }
 }
 
-pub fn wgetch(win: *mut WINDOW) -> i32 {
+pub fn wgetch(win: WINDOW) -> i32 {
     unsafe { sys::wgetch(win) }
 }
 
 // TODO
-// pub fn wgetnstr(win: *mut WINDOW, s: *mut c_char, n: i32) -> i32 {
+// pub fn wgetnstr(win: WINDOW, s: *mut c_char, n: i32) -> i32 {
 //     unsafe { sys::wgetnstr(win, s, n) }
 // }
-// pub fn wgetstr(win: *mut WINDOW, s: *mut c_char) -> i32 {
+// pub fn wgetstr(win: WINDOW, s: *mut c_char) -> i32 {
 //     unsafe { sys::wgetstr(win, s) }
 // }
 
-pub fn whline(win: *mut WINDOW, ch: chtype, n: i32) -> i32 {
+pub fn whline(win: WINDOW, ch: chtype, n: i32) -> i32 {
     unsafe { sys::whline(win, ch, n) }
 }
 
 // TODO
-// pub fn winchnstr       (win: *mut WINDOW, ch: *mut chtype, n: i32) -> i32;
-// pub fn winchstr        (win: *mut WINDOW, ch: *mut chtype) -> i32;
+// pub fn winchnstr       (win: WINDOW, ch: *mut chtype, n: i32) -> i32;
+// pub fn winchstr        (win: WINDOW, ch: *mut chtype) -> i32;
 
-pub fn winch(win: *mut WINDOW) -> chtype {
+pub fn winch(win: WINDOW) -> chtype {
     unsafe { sys::winch(win) }
 }
 
 // TODO
-// pub fn winnstr         (win: *mut WINDOW, str: *mut c_char, n: i32) -> i32;
+// pub fn winnstr         (win: WINDOW, str: *mut c_char, n: i32) -> i32;
 
-pub fn winsch(win: *mut WINDOW, ch: chtype) -> i32 {
+pub fn winsch(win: WINDOW, ch: chtype) -> i32 {
     unsafe { sys::winsch(win, ch) }
 }
 
-pub fn winsdelln(win: *mut WINDOW, n: i32) -> i32 {
+pub fn winsdelln(win: WINDOW, n: i32) -> i32 {
     unsafe { sys::winsdelln(win, n) }
 }
 
-pub fn winsertln(win: *mut WINDOW) -> i32 {
+pub fn winsertln(win: WINDOW) -> i32 {
     unsafe { sys::winsertln(win) }
 }
 
-// pub fn winsnstr(win: *mut WINDOW, s: &str, n: usize) -> i32 {
+// pub fn winsnstr(win: WINDOW, s: &str, n: usize) -> i32 {
 //     winsstr(win, &s[..n])
 // }
 
-pub fn winsstr(win: *mut WINDOW, s: &str) -> i32 {
+pub fn winsstr(win: WINDOW, s: &str) -> i32 {
     unsafe { sys::winsstr(win, cstr(s).as_ptr()) }
 }
 
 // TODO
-// pub fn winstr(win: *mut WINDOW, str: *mut c_char) -> i32;
+// pub fn winstr(win: WINDOW, str: *mut c_char) -> i32;
 
-pub fn wmove(win: *mut WINDOW, y: i32, x: i32) -> i32 {
+pub fn wmove(win: WINDOW, y: i32, x: i32) -> i32 {
     unsafe { sys::wmove(win, y, x) }
 }
 
-pub fn wnoutrefresh(win: *mut WINDOW) -> i32 {
+pub fn wnoutrefresh(win: WINDOW) -> i32 {
     unsafe { sys::wnoutrefresh(win) }
 }
 
 // TODO: C variadic
-// pub fn wprintw(win: *mut WINDOW, fmt: *const c_char, ...) -> i32;
+// pub fn wprintw(win: WINDOW, fmt: *const c_char, ...) -> i32;
 
-pub fn wredrawln(win: *mut WINDOW, beg_line: i32, num_lines: i32) -> i32 {
+pub fn wredrawln(win: WINDOW, beg_line: i32, num_lines: i32) -> i32 {
     unsafe { sys::wredrawln(win, beg_line, num_lines) }
 }
 
-pub fn wrefresh(win: *mut WINDOW) -> i32 {
+pub fn wrefresh(win: WINDOW) -> i32 {
     unsafe { sys::wrefresh(win) }
 }
 
 // TODO: C variadic
-// pub fn wscanw(win: *mut WINDOW, fmt: *const c_char, ...) -> i32;
+// pub fn wscanw(win: WINDOW, fmt: *const c_char, ...) -> i32;
 
-pub fn wscrl(win: *mut WINDOW, n: i32) -> i32 {
+pub fn wscrl(win: WINDOW, n: i32) -> i32 {
     unsafe { sys::wscrl(win, n) }
 }
 
-pub fn wsetscrreg(win: *mut WINDOW, top: i32, bot: i32) -> i32 {
+pub fn wsetscrreg(win: WINDOW, top: i32, bot: i32) -> i32 {
     unsafe { sys::wsetscrreg(win, top, bot) }
 }
 
-pub fn wstandend(win: *mut WINDOW) -> i32 {
+pub fn wstandend(win: WINDOW) -> i32 {
     unsafe { sys::wstandend(win) }
 }
 
-pub fn wstandout(win: *mut WINDOW) -> i32 {
+pub fn wstandout(win: WINDOW) -> i32 {
     unsafe { sys::wstandout(win) }
 }
 
-pub fn wsyncdown(win: *mut WINDOW) {
+pub fn wsyncdown(win: WINDOW) {
     unsafe { sys::wsyncdown(win) }
 }
 
-pub fn wsyncup(win: *mut WINDOW) {
+pub fn wsyncup(win: WINDOW) {
     unsafe { sys::wsyncup(win) }
 }
 
-pub fn wtimeout(win: *mut WINDOW, delay: i32) {
+pub fn wtimeout(win: WINDOW, delay: i32) {
     unsafe { sys::wtimeout(win, delay) }
 }
 
-pub fn wtouchln(win: *mut WINDOW, y: i32, n: i32, changed: i32) -> i32 {
+pub fn wtouchln(win: WINDOW, y: i32, n: i32, changed: i32) -> i32 {
     unsafe { sys::wtouchln(win, y, n, changed) }
 }
 
-pub fn wvline(win: *mut WINDOW, ch: chtype, n: i32) -> i32 {
+pub fn wvline(win: WINDOW, ch: chtype, n: i32) -> i32 {
     unsafe { sys::wvline(win, ch, n) }
 }
 
@@ -1395,7 +1398,7 @@ pub fn border_set(
     unsafe { sys::border_set(ls, rs, ts, bs, tl, tr, bl, br) }
 }
 
-pub fn box_set(win: *mut WINDOW, verch: *const cchar_t, horch: *const cchar_t) -> i32 {
+pub fn box_set(win: WINDOW, verch: *const cchar_t, horch: *const cchar_t) -> i32 {
     unsafe { sys::box_set(win, verch, horch) }
 }
 
@@ -1506,52 +1509,52 @@ pub fn mvvline_set(y: i32, x: i32, wch: *const cchar_t, n: i32) -> i32 {
     unsafe { sys::mvvline_set(y, x, wch, n) }
 }
 
-// pub fn mvwaddnwstr(win: *mut WINDOW, y: i32, x: i32, w: &[u16], n: usize) -> i32 {
+// pub fn mvwaddnwstr(win: WINDOW, y: i32, x: i32, w: &[u16], n: usize) -> i32 {
 //     mvwaddwstr(win, y, x, &w[..n])
 // }
 
-pub fn mvwaddwstr(win: *mut WINDOW, y: i32, x: i32, w: &[u16]) -> i32 {
+pub fn mvwaddwstr(win: WINDOW, y: i32, x: i32, w: &[u16]) -> i32 {
     unsafe { sys::mvwaddwstr(win, y, x, wstr(w).as_ptr()) }
 }
 
 // TODO
-// pub fn mvwadd_wch    (win: *mut WINDOW, y: i32, x: i32, wch: *const cchar_t) -> i32;
-// pub fn mvwadd_wchnstr(win: *mut WINDOW, y: i32, x: i32, wch: *const cchar_t, n: i32) -> i32;
-// pub fn mvwadd_wchstr (win: *mut WINDOW, y: i32, x: i32, wch: *const cchar_t) -> i32;
-// pub fn mvwgetn_wstr  (win: *mut WINDOW, y: i32, x: i32, wstr: *mut wint_t, n: i32) -> i32;
-// pub fn mvwget_wch    (win: *mut WINDOW, y: i32, x: i32, wch: *mut wint_t) -> i32;
-// pub fn mvwget_wstr   (win: *mut WINDOW, y: i32, x: i32, wstr: *mut wint_t) -> i32;
+// pub fn mvwadd_wch    (win: WINDOW, y: i32, x: i32, wch: *const cchar_t) -> i32;
+// pub fn mvwadd_wchnstr(win: WINDOW, y: i32, x: i32, wch: *const cchar_t, n: i32) -> i32;
+// pub fn mvwadd_wchstr (win: WINDOW, y: i32, x: i32, wch: *const cchar_t) -> i32;
+// pub fn mvwgetn_wstr  (win: WINDOW, y: i32, x: i32, wstr: *mut wint_t, n: i32) -> i32;
+// pub fn mvwget_wch    (win: WINDOW, y: i32, x: i32, wch: *mut wint_t) -> i32;
+// pub fn mvwget_wstr   (win: WINDOW, y: i32, x: i32, wstr: *mut wint_t) -> i32;
 
-pub fn mvwhline_set(win: *mut WINDOW, y: i32, x: i32, wch: *const cchar_t, n: i32) -> i32 {
+pub fn mvwhline_set(win: WINDOW, y: i32, x: i32, wch: *const cchar_t, n: i32) -> i32 {
     unsafe { sys::mvwhline_set(win, y, x, wch, n) }
 }
 
 // TODO
-// pub fn mvwinnwstr(win: *mut WINDOW, y: i32, x: i32, w: *mut wchar_t, n: i32) -> i32;
+// pub fn mvwinnwstr(win: WINDOW, y: i32, x: i32, w: *mut wchar_t, n: i32) -> i32;
 
-// pub fn mvwins_nwstr(win: *mut WINDOW, y: i32, x: i32, w: &[u16], n: usize) -> i32 {
+// pub fn mvwins_nwstr(win: WINDOW, y: i32, x: i32, w: &[u16], n: usize) -> i32 {
 //     mvwins_wstr(win, y, x, &w[..n])
 // }
 
 // TODO
-// pub fn mvwins_wch(win: *mut WINDOW, y: i32, x: i32, wch: *const cchar_t) -> i32;
+// pub fn mvwins_wch(win: WINDOW, y: i32, x: i32, wch: *const cchar_t) -> i32;
 
-pub fn mvwins_wstr(win: *mut WINDOW, y: i32, x: i32, w: &[u16]) -> i32 {
+pub fn mvwins_wstr(win: WINDOW, y: i32, x: i32, w: &[u16]) -> i32 {
     unsafe { sys::mvwins_wstr(win, y, x, wstr(w).as_ptr()) }
 }
 
 // TODO
-// pub fn mvwin_wch     (win: *mut WINDOW, y: i32, x: i32, wch: *mut cchar_t) -> i32;
-// pub fn mvwin_wchnstr (win: *mut WINDOW, y: i32, x: i32, wch: *mut cchar_t, n: i32) -> i32;
-// pub fn mvwin_wchstr  (win: *mut WINDOW, y: i32, x: i32, wch: *mut cchar_t) -> i32;
-// pub fn mvwinwstr     (win: *mut WINDOW, y: i32, x: i32, wstr: *mut wchar_t) -> i32;
+// pub fn mvwin_wch     (win: WINDOW, y: i32, x: i32, wch: *mut cchar_t) -> i32;
+// pub fn mvwin_wchnstr (win: WINDOW, y: i32, x: i32, wch: *mut cchar_t, n: i32) -> i32;
+// pub fn mvwin_wchstr  (win: WINDOW, y: i32, x: i32, wch: *mut cchar_t) -> i32;
+// pub fn mvwinwstr     (win: WINDOW, y: i32, x: i32, wstr: *mut wchar_t) -> i32;
 
-pub fn mvwvline_set(win: *mut WINDOW, y: i32, x: i32, wch: *const cchar_t, n: i32) -> i32 {
+pub fn mvwvline_set(win: WINDOW, y: i32, x: i32, wch: *const cchar_t, n: i32) -> i32 {
     unsafe { sys::mvwvline_set(win, y, x, wch, n) }
 }
 
 // TODO
-// pub fn pecho_wchar(win: *mut WINDOW, wch: *const cchar_t) -> i32;
+// pub fn pecho_wchar(win: WINDOW, wch: *const cchar_t) -> i32;
 // pub fn setcchar(
 //     wch: &mut cchar_t,
 //     wch: &u16,
@@ -1573,29 +1576,29 @@ pub fn vline_set(wch: *const cchar_t, n: i32) -> i32 {
     unsafe { sys::vline_set(wch, n) }
 }
 
-// pub fn waddnwstr(win: *mut WINDOW, w: &[u16], n: usize) -> i32 {
+// pub fn waddnwstr(win: WINDOW, w: &[u16], n: usize) -> i32 {
 //     waddwstr(win, &w[..n])
 // }
 
-pub fn waddwstr(win: *mut WINDOW, w: &[u16]) -> i32 {
+pub fn waddwstr(win: WINDOW, w: &[u16]) -> i32 {
     unsafe { sys::waddwstr(win, wstr(w).as_ptr()) }
 }
 
 // TODO
-// pub fn wadd_wch      (win: *mut WINDOW, wch: *const cchar_t) -> i32;
-// pub fn wadd_wchnstr  (win: *mut WINDOW, wch: *const cchar_t, n: i32) -> i32;
-// pub fn wadd_wchstr   (win: *mut WINDOW, wch: *const cchar_t) -> i32;
+// pub fn wadd_wch      (win: WINDOW, wch: *const cchar_t) -> i32;
+// pub fn wadd_wchnstr  (win: WINDOW, wch: *const cchar_t, n: i32) -> i32;
+// pub fn wadd_wchstr   (win: WINDOW, wch: *const cchar_t) -> i32;
 
-pub fn wbkgrnd(win: *mut WINDOW, wch: *const cchar_t) -> i32 {
+pub fn wbkgrnd(win: WINDOW, wch: *const cchar_t) -> i32 {
     unsafe { sys::wbkgrnd(win, wch) }
 }
 
-pub fn wbkgrndset(win: *mut WINDOW, wch: *const cchar_t) {
+pub fn wbkgrndset(win: WINDOW, wch: *const cchar_t) {
     unsafe { sys::wbkgrndset(win, wch) }
 }
 
 pub fn wborder_set(
-    win: *mut WINDOW,
+    win: WINDOW,
     ls: *const cchar_t,
     rs: *const cchar_t,
     ts: *const cchar_t,
@@ -1609,75 +1612,75 @@ pub fn wborder_set(
 }
 
 // TODO
-// pub fn wecho_wchar   (win: *mut WINDOW, wch: *const cchar_t) -> i32;
-// pub fn wgetbkgrnd    (win: *mut WINDOW, wch: *mut cchar_t) -> i32;
-// pub fn wgetn_wstr    (win: *mut WINDOW, wstr: *mut wint_t, n: i32) -> i32;
-// pub fn wget_wch      (win: *mut WINDOW, wch: *mut wint_t) -> i32;
-// pub fn wget_wstr     (win: *mut WINDOW, wstr: *mut wint_t) -> i32;
+// pub fn wecho_wchar   (win: WINDOW, wch: *const cchar_t) -> i32;
+// pub fn wgetbkgrnd    (win: WINDOW, wch: *mut cchar_t) -> i32;
+// pub fn wgetn_wstr    (win: WINDOW, wstr: *mut wint_t, n: i32) -> i32;
+// pub fn wget_wch      (win: WINDOW, wch: *mut wint_t) -> i32;
+// pub fn wget_wstr     (win: WINDOW, wstr: *mut wint_t) -> i32;
 
-pub fn whline_set(win: *mut WINDOW, wch: *const cchar_t, n: i32) -> i32 {
+pub fn whline_set(win: WINDOW, wch: *const cchar_t, n: i32) -> i32 {
     unsafe { sys::whline_set(win, wch, n) }
 }
 
 // TODO
-// pub fn winnwstr(win: *mut WINDOW, wstr: *mut wchar_t, n: i32) -> i32;
+// pub fn winnwstr(win: WINDOW, wstr: *mut wchar_t, n: i32) -> i32;
 
-// pub fn wins_nwstr(win: *mut WINDOW, w: &[u16], n: usize) -> i32 {
+// pub fn wins_nwstr(win: WINDOW, w: &[u16], n: usize) -> i32 {
 //     wins_wstr(win, &w[..n])
 // }
 
 // TODO
-// pub fn wins_wch(win: *mut WINDOW, wch: *const cchar_t) -> i32;
+// pub fn wins_wch(win: WINDOW, wch: *const cchar_t) -> i32;
 
-pub fn wins_wstr(win: *mut WINDOW, w: &[u16]) -> i32 {
+pub fn wins_wstr(win: WINDOW, w: &[u16]) -> i32 {
     unsafe { sys::wins_wstr(win, wstr(w).as_ptr()) }
 }
 
 // TODO
-// pub fn winwstr       (win: *mut WINDOW, wstr: *mut wchar_t) -> i32;
-// pub fn win_wch       (win: *mut WINDOW, wch: *mut cchar_t) -> i32;
-// pub fn win_wchnstr   (win: *mut WINDOW, wch: *mut cchar_t, n: i32) -> i32;
-// pub fn win_wchstr    (win: *mut WINDOW, wch: *mut cchar_t) -> i32;
+// pub fn winwstr       (win: WINDOW, wstr: *mut wchar_t) -> i32;
+// pub fn win_wch       (win: WINDOW, wch: *mut cchar_t) -> i32;
+// pub fn win_wchnstr   (win: WINDOW, wch: *mut cchar_t, n: i32) -> i32;
+// pub fn win_wchstr    (win: WINDOW, wch: *mut cchar_t) -> i32;
 // pub fn wunctrl       (wc: *mut cchar_t) -> *mut wchar_t;
 
-pub fn wvline_set(win: *mut WINDOW, wch: *const cchar_t, n: i32) -> i32 {
+pub fn wvline_set(win: WINDOW, wch: *const cchar_t, n: i32) -> i32 {
     unsafe { sys::wvline_set(win, wch, n) }
 }
 
 
-pub fn getattrs(win: *mut WINDOW) -> chtype {
+pub fn getattrs(win: WINDOW) -> chtype {
     unsafe { sys::getattrs(win) }
 }
 
-pub fn getbegx(win: *mut WINDOW) -> i32 {
+pub fn getbegx(win: WINDOW) -> i32 {
     unsafe { sys::getbegx(win) }
 }
 
-pub fn getbegy(win: *mut WINDOW) -> i32 {
+pub fn getbegy(win: WINDOW) -> i32 {
     unsafe { sys::getbegy(win) }
 }
 
-pub fn getmaxx(win: *mut WINDOW) -> i32 {
+pub fn getmaxx(win: WINDOW) -> i32 {
     unsafe { sys::getmaxx(win) }
 }
 
-pub fn getmaxy(win: *mut WINDOW) -> i32 {
+pub fn getmaxy(win: WINDOW) -> i32 {
     unsafe { sys::getmaxy(win) }
 }
 
-pub fn getparx(win: *mut WINDOW) -> i32 {
+pub fn getparx(win: WINDOW) -> i32 {
     unsafe { sys::getparx(win) }
 }
 
-pub fn getpary(win: *mut WINDOW) -> i32 {
+pub fn getpary(win: WINDOW) -> i32 {
     unsafe { sys::getpary(win) }
 }
 
-pub fn getcurx(win: *mut WINDOW) -> i32 {
+pub fn getcurx(win: WINDOW) -> i32 {
     unsafe { sys::getcurx(win) }
 }
 
-pub fn getcury(win: *mut WINDOW) -> i32 {
+pub fn getcury(win: WINDOW) -> i32 {
     unsafe { sys::getcury(win) }
 }
 
@@ -1739,7 +1742,7 @@ pub fn request_mouse_pos() -> i32 {
     unsafe { sys::request_mouse_pos() }
 }
 
-pub fn wmouse_position(win: *mut WINDOW, y: &mut  i32, x: &mut  i32) {
+pub fn wmouse_position(win: WINDOW, y: &mut  i32, x: &mut  i32) {
     unsafe { sys::wmouse_position(win, y, x) }
 }
 
@@ -1761,15 +1764,15 @@ pub fn has_key(key: i32) -> bool {
     unsafe { sys::has_key(key) }
 }
 
-pub fn is_keypad(win: *const WINDOW) -> bool {
+pub fn is_keypad(win: WINDOW) -> bool {
     unsafe { sys::is_keypad(win) }
 }
 
-pub fn is_leaveok(win: *const WINDOW) -> bool {
+pub fn is_leaveok(win: WINDOW) -> bool {
     unsafe { sys::is_leaveok(win) }
 }
 
-pub fn is_pad(pad: *const WINDOW) -> bool {
+pub fn is_pad(pad: WINDOW) -> bool {
     unsafe { sys::is_pad(pad) }
 }
 
@@ -1781,7 +1784,7 @@ pub fn use_default_colors() -> i32 {
     unsafe { sys::use_default_colors() }
 }
 
-pub fn wresize(win: *mut WINDOW, nlines: i32, ncols: i32) -> i32 {
+pub fn wresize(win: WINDOW, nlines: i32, ncols: i32) -> i32 {
     unsafe { sys::wresize(win, nlines, ncols) }
 }
 
@@ -1809,11 +1812,11 @@ pub fn ungetmouse(event: &mut MEVENT) -> i32 {
     unsafe { sys::ungetmouse(event) }
 }
 
-pub fn wenclose(win: *const WINDOW, y: i32, x: i32) -> bool {
+pub fn wenclose(win: WINDOW, y: i32, x: i32) -> bool {
     unsafe { sys::wenclose(win, y, x) }
 }
 
-pub fn wmouse_trafo(win: *const WINDOW, y: &mut i32, x: &mut i32, to_screen: bool) -> bool {
+pub fn wmouse_trafo(win: WINDOW, y: &mut i32, x: &mut i32, to_screen: bool) -> bool {
     unsafe { sys::wmouse_trafo(win, y, x, to_screen) }
 }
 
@@ -1846,19 +1849,19 @@ pub fn mvinsrawch(y: i32, x: i32, ch: chtype) -> i32 {
     unsafe { sys::mvinsrawch(y, x, ch) }
 }
 
-pub fn mvwaddrawch(win: *mut WINDOW, y: i32, x: i32, ch: chtype) -> i32 {
+pub fn mvwaddrawch(win: WINDOW, y: i32, x: i32, ch: chtype) -> i32 {
     unsafe { sys::mvwaddrawch(win, y, x, ch) }
 }
 
-pub fn mvwdeleteln(win: *mut WINDOW, y: i32, x: i32) -> i32 {
+pub fn mvwdeleteln(win: WINDOW, y: i32, x: i32) -> i32 {
     unsafe { sys::mvwdeleteln(win, y, x) }
 }
 
-pub fn mvwinsertln(win: *mut WINDOW, y: i32, x: i32) -> i32 {
+pub fn mvwinsertln(win: WINDOW, y: i32, x: i32) -> i32 {
     unsafe { sys::mvwinsertln(win, y, x) }
 }
 
-pub fn mvwinsrawch(win: *mut WINDOW, y: i32, x: i32, ch: chtype) -> i32 {
+pub fn mvwinsrawch(win: WINDOW, y: i32, x: i32, ch: chtype) -> i32 {
     unsafe { sys::mvwinsrawch(win, y, x, ch) }
 }
 
@@ -1870,15 +1873,15 @@ pub fn resize_term(nlines: i32, ncols: i32) -> i32 {
     unsafe { sys::resize_term(nlines, ncols) }
 }
 
-pub fn resize_window(win: *mut WINDOW, nlines: i32, ncols: i32) -> *mut WINDOW {
+pub fn resize_window(win: WINDOW, nlines: i32, ncols: i32) -> WINDOW {
     unsafe { sys::resize_window(win, nlines, ncols) }
 }
 
-pub fn waddrawch(win: *mut WINDOW, ch: chtype) -> i32 {
+pub fn waddrawch(win: WINDOW, ch: chtype) -> i32 {
     unsafe { sys::waddrawch(win, ch) }
 }
 
-pub fn winsrawch(win: *mut WINDOW, ch: chtype) -> i32 {
+pub fn winsrawch(win: WINDOW, ch: chtype) -> i32 {
     unsafe { sys::winsrawch(win, ch) }
 }
 
@@ -1954,7 +1957,7 @@ pub fn PDC_return_key_modifiers(flag: bool) -> i32 {
 }
 
 
-pub fn touchoverlap(win1: *const WINDOW, win2: *mut WINDOW) -> i32 {
+pub fn touchoverlap(win1: WINDOW, win2: WINDOW) -> i32 {
     unsafe { sys::touchoverlap(win1, win2) }
 }
 
@@ -1966,28 +1969,28 @@ pub fn underscore() -> i32 {
     unsafe { sys::underscore() }
 }
 
-pub fn wunderend(win: *mut WINDOW) -> i32 {
+pub fn wunderend(win: WINDOW) -> i32 {
     unsafe { sys::wunderend(win) }
 }
 
-pub fn wunderscore(win: *mut WINDOW) -> i32 {
+pub fn wunderscore(win: WINDOW) -> i32 {
     unsafe { sys::wunderscore(win) }
 }
 
 
-pub fn getbegyx(win: *mut WINDOW, y: &mut i32, x: &mut i32) {
+pub fn getbegyx(win: WINDOW, y: &mut i32, x: &mut i32) {
     unsafe { sys::getbegyx(win, y, x) }
 }
 
-pub fn getmaxyx(win: *mut WINDOW, y: &mut i32, x: &mut i32) {
+pub fn getmaxyx(win: WINDOW, y: &mut i32, x: &mut i32) {
     unsafe { sys::getmaxyx(win, y, x) }
 }
 
-pub fn getparyx(win: *mut WINDOW, y: &mut i32, x: &mut i32) {
+pub fn getparyx(win: WINDOW, y: &mut i32, x: &mut i32) {
     unsafe { sys::getparyx(win, y, x) }
 }
 
-pub fn getyx(win: *mut WINDOW, y: &mut i32, x: &mut i32) {
+pub fn getyx(win: WINDOW, y: &mut i32, x: &mut i32) {
     unsafe { sys::getyx(win, y, x) }
 }
 
@@ -2022,7 +2025,7 @@ pub mod panel {
         unsafe { sys::panel::move_panel(pan, starty, startx) }
     }
 
-    pub fn new_panel(win: *mut WINDOW) -> *mut PANEL {
+    pub fn new_panel(win: WINDOW) -> *mut PANEL {
         unsafe { sys::panel::new_panel(win) }
     }
 
@@ -2042,11 +2045,11 @@ pub mod panel {
         unsafe { sys::panel::panel_userptr(pan) }
     }
 
-    pub fn panel_window(pan: *const PANEL) -> *mut WINDOW {
+    pub fn panel_window(pan: *const PANEL) -> WINDOW {
         unsafe { sys::panel::panel_window(pan) }
     }
 
-    pub fn replace_panel(pan: *mut PANEL, win: *mut WINDOW) -> i32 {
+    pub fn replace_panel(pan: *mut PANEL, win: WINDOW) -> i32 {
         unsafe { sys::panel::replace_panel(pan, win) }
     }
 
