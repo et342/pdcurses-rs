@@ -3,7 +3,7 @@ Windows Console [PDCurses] bindings for Rust.
 
 # Usage
 
-## `Cargo.toml`
+Cargo.toml
 
 ```toml
 [dependencies]
@@ -26,19 +26,13 @@ ncurses = { version = "5.99.0", features = ["wide"] }
 pdcurses = { git = "https://github.com/et342/pdcurses-rs", features = ["ncurses_compat"] }
 ```
 
-## `main.rs`
+main.rs
 
 ```rust
-use pdcurses::{
-    initscr,
-    stdscr,
-    getmaxyx,
-    mv,
-    addstr,
-    refresh,
-    getch,
-    endwin
-};
+// #[cfg(unix)]
+// use ncurses::*;
+// #[cfg(windows)]
+use pdcurses::*;
 
 fn main() {
     initscr();
