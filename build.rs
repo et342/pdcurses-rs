@@ -57,8 +57,22 @@ fn main() {
     println!("cargo:rerun-if-changed=PDCurses");
     println!("cargo:rerun-if-changed=build.rs");
 
-    #[cfg(all(not(doc), windows))] {
-        build();
+    #[cfg(all(not(doc), windows))]
+    {
+        if std::env::var_os("CARGO_FEATURE_UNBUNDLED").is_some() {
+            println!("cargo:rerun-if-env-changed=LIBRARY_PATH");
+            println!("cargo:rustc-link-lib=static=pdcurses");
+
+            if let Some(paths) = std::env::var_os("LIBRARY_PATH") {
+                for path in std::env::split_paths(&paths) {
+                    println!("cargo:rustc-link-search=native={}", path.display());
+                }
+            }
+        } else {
+            build();
+        }
+        println!("cargo:rustc-link-lib=dylib=user32");
+        println!("cargo:rustc-link-lib=dylib=advapi32");
     }
 }
 
@@ -82,7 +96,4 @@ fn build() {
         .files(PDCLIB_FILES)
         .files(WINCON_FILES)
         .compile("pdcurses");
-
-    println!("cargo:rustc-link-lib=dylib=user32");
-    println!("cargo:rustc-link-lib=dylib=advapi32");
 }
