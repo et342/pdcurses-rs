@@ -626,10 +626,22 @@ pub fn is_wintouched(win: WINDOW) -> bool {
     unsafe { sys::is_wintouched(win) }
 }
 
-pub fn keyname(c: i32) -> String {
+fn keyname_(c: i32) -> String {
     // NOTE: In PDCurses 3.9 keyname() never returns NULL.
     let s = unsafe { std::ffi::CStr::from_ptr(sys::keyname(c)) };
     s.to_str().unwrap().into()
+}
+
+#[cfg(feature = "ncurses_compat")]
+#[inline(always)]
+pub fn keyname(c: i32) -> Option<String> {
+    Some(keyname_(c))
+}
+
+#[cfg(not(feature = "ncurses_compat"))]
+#[inline(always)]
+pub fn keyname(c: i32) -> String {
+    keyname_(c)
 }
 
 pub fn keypad(win: WINDOW, flag: bool) -> i32 {
