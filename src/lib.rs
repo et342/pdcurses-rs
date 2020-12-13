@@ -626,9 +626,10 @@ pub fn is_wintouched(win: WINDOW) -> bool {
     unsafe { sys::is_wintouched(win) }
 }
 
-pub fn keyname(c: i32) -> &'static str {
+pub fn keyname(c: i32) -> String {
+    // NOTE: In PDCurses 3.9 keyname() never returns NULL.
     let s = unsafe { std::ffi::CStr::from_ptr(sys::keyname(c)) };
-    s.to_str().unwrap()
+    s.to_str().unwrap().into()
 }
 
 pub fn keypad(win: WINDOW, flag: bool) -> i32 {
