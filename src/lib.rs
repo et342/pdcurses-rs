@@ -679,8 +679,8 @@ pub fn mv(y: i32, x: i32) -> i32 {
     unsafe { sys::move_(y, x) }
 }
 
-pub fn mvaddch(y: i32, x: i32, ch: char) -> i32 {
-    unsafe { sys::mvadd_wch(y, x, &ch as *const char as *const u32) }
+pub fn mvaddch(y: i32, x: i32, ch: chtype) -> i32 {
+    unsafe { sys::mvaddch(y, x, ch) }
 }
 
 // pub fn mvaddchnstr(y: i32, x: i32, ch: &[chtype], n: usize) -> i32 {
