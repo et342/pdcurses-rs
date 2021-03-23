@@ -1,4 +1,47 @@
-#![cfg_attr(not(windows), allow(dead_code))]
+
+fn main() {
+    println!("cargo:rerun-if-changed=PDCurses");
+    println!("cargo:rerun-if-changed=build.rs");
+
+    if cfg!(all(not(doc), windows)) {
+        build();
+    }
+}
+
+fn build() {
+    if cfg!(feature = "unbundled") {
+        println!("cargo:rerun-if-env-changed=LIBRARY_PATH");
+        println!("cargo:rustc-link-lib=static=pdcurses");
+
+        if let Some(paths) = std::env::var_os("LIBRARY_PATH") {
+            for path in std::env::split_paths(&paths) {
+                println!("cargo:rustc-link-search=native={}", path.display());
+            }
+        }
+    } else {
+        let mut build = cc::Build::new();
+
+        if cfg!(feature = "debug") {
+            build.define("PDCDEBUG", None);
+        }
+
+        if cfg!(feature = "force_utf8") {
+            build.define("PDC_FORCE_UTF8", None);
+        }
+
+        build
+            .warnings(false)
+            .extra_warnings(false)
+            .define("PDC_RGB", None)
+            .define("PDC_WIDE", None)
+            .include("PDCurses")
+            .files(PDCLIB_FILES)
+            .files(WINCON_FILES)
+            .compile("pdcurses");
+    }
+    println!("cargo:rustc-link-lib=dylib=user32");
+    println!("cargo:rustc-link-lib=dylib=advapi32");
+}
 
 const PDCLIB_FILES: &[&str] = &[
     "PDCurses/pdcurses/addch.c",
@@ -52,48 +95,3 @@ const WINCON_FILES: &[&str] = &[
     "PDCurses/wincon/pdcsetsc.c",
     "PDCurses/wincon/pdcutil.c",
 ];
-
-fn main() {
-    println!("cargo:rerun-if-changed=PDCurses");
-    println!("cargo:rerun-if-changed=build.rs");
-
-    #[cfg(all(not(doc), windows))]
-    {
-        if std::env::var_os("CARGO_FEATURE_UNBUNDLED").is_some() {
-            println!("cargo:rerun-if-env-changed=LIBRARY_PATH");
-            println!("cargo:rustc-link-lib=static=pdcurses");
-
-            if let Some(paths) = std::env::var_os("LIBRARY_PATH") {
-                for path in std::env::split_paths(&paths) {
-                    println!("cargo:rustc-link-search=native={}", path.display());
-                }
-            }
-        } else {
-            build();
-        }
-        println!("cargo:rustc-link-lib=dylib=user32");
-        println!("cargo:rustc-link-lib=dylib=advapi32");
-    }
-}
-
-fn build() {
-    let mut build = cc::Build::new();
-
-    if std::env::var_os("CARGO_FEATURE_DEBUG").is_some() {
-        build.define("PDCDEBUG", None);
-    }
-
-    if std::env::var_os("CARGO_FEATURE_FORCE_UTF8").is_some() {
-        build.define("PDC_FORCE_UTF8", None);
-    }
-
-    build
-        .warnings(false)
-        .extra_warnings(false)
-        .define("PDC_RGB", None)
-        .define("PDC_WIDE", None)
-        .include("PDCurses")
-        .files(PDCLIB_FILES)
-        .files(WINCON_FILES)
-        .compile("pdcurses");
-}
