@@ -1,10 +1,16 @@
 
+/*
+    ****************************** REMINDER ******************************
+    Search for VERCHECK when managing PDCurses.
+    ****************************** REMINDER ******************************
+*/
+
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 #![allow(non_upper_case_globals)]
 
 #[cfg(all(not(doc), not(windows)))]
-compile_error!("These PDCurses bindings support only Windows.");
+compile_error!("This is a Windows specific package.");
 
 use libc::FILE;
 
@@ -1391,6 +1397,9 @@ pub fn addwstr(w: &[u16]) -> i32 {
 // pub fn add_wchstr(wch: &[cchar_t]) -> i32 {
 //     unsafe { sys::add_wchstr(ccstr(wch).as_ptr()) }
 // }
+
+// TODO
+//
 // pub fn bkgrnd(wch: *const cchar_t) -> i32 {
 //     unsafe { sys::bkgrnd(wch) }
 // }
@@ -1427,9 +1436,12 @@ pub fn getbkgrnd(wch: &mut cchar_t) -> i32 {
 }
 
 // TODO
+//
+//     wch is a 0 terminated string
+//
 // pub fn getcchar(
 //     wcval: &cchar_t,
-//     wch: &mut u16,
+//     wch: *mut u16,
 //     attrs: &mut attr_t,
 //     color_pair: &mut i16,
 // ) -> i32 {
@@ -1454,9 +1466,6 @@ pub fn hline_set(wch: *const cchar_t, n: i32) -> i32 {
     unsafe { sys::hline_set(wch, n) }
 }
 
-// TODO
-// pub fn innwstr(wstr: *mut wchar_t, n: i32) -> i32;
-
 // pub fn ins_nwstr(w: &[u16], n: usize) -> i32 {
 //     ins_wstr(&w[..n])
 // }
@@ -1470,6 +1479,8 @@ pub fn ins_wstr(w: &[u16]) -> i32 {
     unsafe { sys::ins_wstr(wstr(w).as_ptr()) }
 }
 
+// TODO
+// pub fn innwstr       (wstr: *mut wchar_t, n: i32) -> i32;
 // pub fn inwstr        (wstr: *mut wchar_t) -> i32;
 // pub fn in_wch        (wch: *mut cchar_t) -> i32;
 // pub fn in_wchnstr    (wch: *mut cchar_t, n: i32) -> i32;
@@ -1496,6 +1507,8 @@ pub fn mvaddwstr(y: i32, x: i32, w: &[u16]) -> i32 {
 // pub fn mvadd_wch     (y: i32, x: i32, wch: *const cchar_t) -> i32;
 // pub fn mvadd_wchnstr (y: i32, x: i32, wch: *const cchar_t, n: i32) -> i32;
 // pub fn mvadd_wchstr  (y: i32, x: i32, wch: *const cchar_t) -> i32;
+
+// TODO: [mvget_wstr] utf-16
 // pub fn mvgetn_wstr   (y: i32, x: i32, wstr: *mut wint_t, n: i32) -> i32;
 // pub fn mvget_wch     (y: i32, x: i32, wch: *mut wint_t) -> i32;
 // pub fn mvget_wstr    (y: i32, x: i32, wstr: *mut wint_t) -> i32;
@@ -1540,6 +1553,8 @@ pub fn mvwaddwstr(win: WINDOW, y: i32, x: i32, w: &[u16]) -> i32 {
 // pub fn mvwadd_wch    (win: WINDOW, y: i32, x: i32, wch: *const cchar_t) -> i32;
 // pub fn mvwadd_wchnstr(win: WINDOW, y: i32, x: i32, wch: *const cchar_t, n: i32) -> i32;
 // pub fn mvwadd_wchstr (win: WINDOW, y: i32, x: i32, wch: *const cchar_t) -> i32;
+
+// TODO: [mvwwget_wstr] utf-16
 // pub fn mvwgetn_wstr  (win: WINDOW, y: i32, x: i32, wstr: *mut wint_t, n: i32) -> i32;
 // pub fn mvwget_wch    (win: WINDOW, y: i32, x: i32, wch: *mut wint_t) -> i32;
 // pub fn mvwget_wstr   (win: WINDOW, y: i32, x: i32, wstr: *mut wint_t) -> i32;
@@ -1573,7 +1588,7 @@ pub fn mvwvline_set(win: WINDOW, y: i32, x: i32, wch: *const cchar_t, n: i32) ->
 }
 
 // TODO
-// pub fn pecho_wchar(win: WINDOW, wch: *const cchar_t) -> i32;
+// pub fn pecho_wchar(pad: WINDOW, wch: *const cchar_t) -> i32;
 // pub fn setcchar(
 //     wch: &mut cchar_t,
 //     wch: &u16,

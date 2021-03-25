@@ -11,15 +11,22 @@ keywords = ["windows", "console", "tui", "terminal", "curses"]
 readme = "README.md"
 links = "pdcurses"
 
-[features]
-debug = [] # Enable debugging facilities within PDCurses.
-force_utf8 = [] # Force PDCurses to treat byte strings as UTF-8. PDCurses will rely on the current locale otherwise.
-ncurses_compat = [] # Provide ncurses-rs compatibility APIs
-unbundled = [] # Don't build PDCurses from source. Search for it in paths specified by the LIBRARY_PATH environment variable.
-               # PDCurses must be built with RGB an WIDE modes enabled.
-
 [dependencies]
 libc = "0.2.80"
 
 [build-dependencies]
 cc = "1.0.62"
+
+[features]
+# Enable debugging facilities within PDCurses.
+debug = []
+
+# Force PDCurses to treat byte strings as UTF-8. PDCurses will rely on the current locale otherwise.
+force_utf8 = []
+
+# Provide ncurses-rs compatibility APIs
+ncurses_compat = []
+
+# Don't build PDCurses from source. Instead, search for it in the paths specified by the LIBRARY_PATH environment variable.
+# PDCurses must be built with RGB an WIDE modes enabled.
+unbundled = []
