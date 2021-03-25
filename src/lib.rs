@@ -27,7 +27,7 @@ fn chstr(s: &[chtype]) -> Vec<chtype> {
 }
 
 unsafe fn wcstr(ptr: *const u16) -> Vec<u16> {
-    std::slice::from_raw_parts(ptr, libc::wcslen(ptr)).to_vec()
+    core::slice::from_raw_parts(ptr, libc::wcslen(ptr)).to_vec()
 }
 
 pub mod sys;
@@ -326,19 +326,19 @@ pub fn attrset(attrs: chtype) -> i32 {
 }
 
 pub fn attr_get(attrs: &mut attr_t, color_pair: &mut i16) -> i32 {
-    unsafe { sys::attr_get(attrs, color_pair, std::ptr::null_mut()) }
+    unsafe { sys::attr_get(attrs, color_pair, core::ptr::null_mut()) }
 }
 
 pub fn attr_off(attrs: attr_t) -> i32 {
-    unsafe { sys::attr_off(attrs, std::ptr::null_mut()) }
+    unsafe { sys::attr_off(attrs, core::ptr::null_mut()) }
 }
 
 pub fn attr_on(attrs: attr_t) -> i32 {
-    unsafe { sys::attr_on(attrs, std::ptr::null_mut()) }
+    unsafe { sys::attr_on(attrs, core::ptr::null_mut()) }
 }
 
 pub fn attr_set(attrs: attr_t, color_pair: i16) -> i32 {
-    unsafe { sys::attr_set(attrs, color_pair, std::ptr::null_mut()) }
+    unsafe { sys::attr_set(attrs, color_pair, core::ptr::null_mut()) }
 }
 
 pub fn baudrate() -> i32 {
@@ -383,7 +383,7 @@ pub fn cbreak() -> i32 {
 }
 
 pub fn chgat(n: i32, attrs: attr_t, color_pair: i16) -> i32 {
-    unsafe { sys::chgat(n, attrs, color_pair, std::ptr::null()) }
+    unsafe { sys::chgat(n, attrs, color_pair, core::ptr::null()) }
 }
 
 pub fn clearok(win: WINDOW, flag: bool) -> i32 {
@@ -407,7 +407,7 @@ pub fn color_content(color: i16, red: &mut i16, green: &mut i16, blue: &mut i16)
 }
 
 pub fn color_set(color_pair: i16) -> i32 {
-    unsafe { sys::color_set(color_pair, std::ptr::null_mut()) }
+    unsafe { sys::color_set(color_pair, core::ptr::null_mut()) }
 }
 
 pub fn COLOR_PAIR(n: i16) -> attr_t {
@@ -700,7 +700,7 @@ pub fn mvaddstr(y: i32, x: i32, s: &str) -> i32 {
 }
 
 pub fn mvchgat(y: i32, x: i32, n: i32, attrs: attr_t, color_pair: i16) -> i32 {
-    unsafe { sys::mvchgat(y, x, n, attrs, color_pair, std::ptr::null()) }
+    unsafe { sys::mvchgat(y, x, n, attrs, color_pair, core::ptr::null()) }
 }
 
 pub fn mvcur(oldrow: i32, oldcol: i32, newrow: i32, newcol: i32) -> i32 {
@@ -796,7 +796,7 @@ pub fn mvwaddstr(win: WINDOW, y: i32, x: i32, s: &str) -> i32 {
 }
 
 pub fn mvwchgat(win: WINDOW, y: i32, x: i32, n: i32, attrs: attr_t, color_pair: i16) -> i32 {
-    unsafe { sys::mvwchgat(win, y, x, n, attrs, color_pair, std::ptr::null()) }
+    unsafe { sys::mvwchgat(win, y, x, n, attrs, color_pair, core::ptr::null()) }
 }
 
 pub fn mvwdelch(win: WINDOW, y: i32, x: i32) -> i32 {
@@ -863,7 +863,7 @@ pub fn newpad(nlines: i32, ncols: i32) -> WINDOW {
 
 pub fn newterm(termtype: Option<&str>, outfd: *mut FILE, infd: *mut FILE) -> SCREEN {
     let ty = termtype.map(cstr);
-    let ty_ptr = ty.as_ref().map(|s| s.as_ptr()).unwrap_or(std::ptr::null());
+    let ty_ptr = ty.as_ref().map(|s| s.as_ptr()).unwrap_or(core::ptr::null());
     unsafe { sys::newterm(ty_ptr, outfd, infd) }
 }
 
@@ -1018,7 +1018,7 @@ pub fn slk_attroff(attrs: chtype) -> i32 {
 }
 
 pub fn slk_attr_off(attrs: attr_t) -> i32 {
-    unsafe { sys::slk_attr_off(attrs, std::ptr::null_mut()) }
+    unsafe { sys::slk_attr_off(attrs, core::ptr::null_mut()) }
 }
 
 pub fn slk_attron(attrs: chtype) -> i32 {
@@ -1026,7 +1026,7 @@ pub fn slk_attron(attrs: chtype) -> i32 {
 }
 
 pub fn slk_attr_on(attrs: attr_t) -> i32 {
-    unsafe { sys::slk_attr_on(attrs, std::ptr::null_mut()) }
+    unsafe { sys::slk_attr_on(attrs, core::ptr::null_mut()) }
 }
 
 pub fn slk_attrset(attrs: chtype) -> i32 {
@@ -1034,7 +1034,7 @@ pub fn slk_attrset(attrs: chtype) -> i32 {
 }
 
 pub fn slk_attr_set(attrs: attr_t, color_pair: i16) -> i32 {
-    unsafe { sys::slk_attr_set(attrs, color_pair, std::ptr::null_mut()) }
+    unsafe { sys::slk_attr_set(attrs, color_pair, core::ptr::null_mut()) }
 }
 
 pub fn slk_clear() -> i32 {
@@ -1189,19 +1189,19 @@ pub fn wattrset(win: WINDOW, attrs: chtype) -> i32 {
 }
 
 pub fn wattr_get(win: WINDOW, attrs: &mut attr_t, color_pair: &mut i16) -> i32 {
-    unsafe { sys::wattr_get(win, attrs, color_pair, std::ptr::null_mut()) }
+    unsafe { sys::wattr_get(win, attrs, color_pair, core::ptr::null_mut()) }
 }
 
 pub fn wattr_off(win: WINDOW, attrs: attr_t) -> i32 {
-    unsafe { sys::wattr_off(win, attrs, std::ptr::null_mut()) }
+    unsafe { sys::wattr_off(win, attrs, core::ptr::null_mut()) }
 }
 
 pub fn wattr_on(win: WINDOW, attrs: attr_t) -> i32 {
-    unsafe { sys::wattr_on(win, attrs, std::ptr::null_mut()) }
+    unsafe { sys::wattr_on(win, attrs, core::ptr::null_mut()) }
 }
 
 pub fn wattr_set(win: WINDOW, attrs: attr_t, color_pair: i16) -> i32 {
-    unsafe { sys::wattr_set(win, attrs, color_pair, std::ptr::null_mut()) }
+    unsafe { sys::wattr_set(win, attrs, color_pair, core::ptr::null_mut()) }
 }
 
 pub fn wbkgdset(win: WINDOW, ch: chtype) {
@@ -1227,7 +1227,7 @@ pub fn wborder(
 }
 
 pub fn wchgat(win: WINDOW, n: i32, attrs: attr_t, color_pair: i16) -> i32 {
-    unsafe { sys::wchgat(win, n, attrs, color_pair, std::ptr::null_mut()) }
+    unsafe { sys::wchgat(win, n, attrs, color_pair, core::ptr::null_mut()) }
 }
 
 pub fn wclear(win: WINDOW) -> i32 {
@@ -1243,7 +1243,7 @@ pub fn wclrtoeol(win: WINDOW) -> i32 {
 }
 
 pub fn wcolor_set(win: WINDOW, color: i16) -> i32 {
-    unsafe { sys::wcolor_set(win, color, std::ptr::null_mut()) }
+    unsafe { sys::wcolor_set(win, color, core::ptr::null_mut()) }
 }
 
 pub fn wcursyncup(win: WINDOW) {
@@ -1433,7 +1433,7 @@ pub fn getbkgrnd(wch: &mut cchar_t) -> i32 {
 //     attrs: &mut attr_t,
 //     color_pair: &mut i16,
 // ) -> i32 {
-//     unsafe { sys::getcchar(wcval, wch, attrs, color_pair, std::ptr::null_mut()) }
+//     unsafe { sys::getcchar(wcval, wch, attrs, color_pair, core::ptr::null_mut()) }
 // }
 // pub fn getn_wstr     (wstr: *mut wint_t, n: i32) -> i32;
 
@@ -1574,7 +1574,7 @@ pub fn mvwvline_set(win: WINDOW, y: i32, x: i32, wch: *const cchar_t, n: i32) ->
 //     attrs: attr_t,
 //     color_pair: i16,
 // ) -> i32 {
-//     unsafe { sys::setcchar(wch, wch, attrs, color_pair, std::ptr::null_mut()) }
+//     unsafe { sys::setcchar(wch, wch, attrs, color_pair, core::ptr::null_mut()) }
 // }
 
 pub fn slk_wset(labnum: i32, label: &[u16], justify: i32) -> i32 {
@@ -1935,7 +1935,7 @@ pub fn PDC_clearclipboard() -> i32 {
 }
 
 pub fn PDC_getclipboard(contents: &mut Vec<u8>) -> i32 {
-    let mut ptr: *mut i8 = std::ptr::null_mut();
+    let mut ptr: *mut i8 = core::ptr::null_mut();
     let mut len: i32 = 0;
 
     if sys::ERR == unsafe {
@@ -1947,7 +1947,7 @@ pub fn PDC_getclipboard(contents: &mut Vec<u8>) -> i32 {
     contents.clear();
     contents.reserve(len as usize);
     contents.extend_from_slice(unsafe {
-        std::slice::from_raw_parts(ptr as *const u8, len as usize)
+        core::slice::from_raw_parts(ptr as *const u8, len as usize)
     });
 
     unsafe {
@@ -2015,7 +2015,7 @@ pub fn getsyx(y: &mut i32, x: &mut i32) {
 pub mod panel {
     use super::sys;
     use super::WINDOW;
-    use std::ffi::c_void;
+    use core::ffi::c_void;
 
     pub use sys::panel::{
         PANELOBS,
