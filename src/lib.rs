@@ -1435,14 +1435,20 @@ pub fn getbkgrnd(wch: &mut cchar_t) -> i32 {
 // ) -> i32 {
 //     unsafe { sys::getcchar(wcval, wch, attrs, color_pair, core::ptr::null_mut()) }
 // }
-// pub fn getn_wstr     (wstr: *mut wint_t, n: i32) -> i32;
 
 pub fn get_wch(wch: &mut u16) -> i32 {
     unsafe { sys::get_wch(wch) }
 }
 
-// TODO
-// pub fn get_wstr      (wstr: *mut wint_t) -> i32;
+#[deprecated = "use `get_wstr`"]
+pub fn getn_wstr(_: &mut [u16], _: i32) -> i32 {
+    unimplemented!("use `get_wstr`")
+}
+
+pub fn get_wstr(buf: &mut [u16]) -> i32 {
+    assert!(buf.len() <= i32::MAX as usize);
+    unsafe { sys::getn_wstr(buf.as_mut_ptr(), buf.len() as i32) }
+}
 
 pub fn hline_set(wch: *const cchar_t, n: i32) -> i32 {
     unsafe { sys::hline_set(wch, n) }
@@ -1627,9 +1633,20 @@ pub fn wborder_set(
 // TODO
 // pub fn wecho_wchar   (win: WINDOW, wch: *const cchar_t) -> i32;
 // pub fn wgetbkgrnd    (win: WINDOW, wch: *mut cchar_t) -> i32;
-// pub fn wgetn_wstr    (win: WINDOW, wstr: *mut wint_t, n: i32) -> i32;
-// pub fn wget_wch      (win: WINDOW, wch: *mut wint_t) -> i32;
-// pub fn wget_wstr     (win: WINDOW, wstr: *mut wint_t) -> i32;
+
+pub fn wget_wch(win: WINDOW, wch: &mut u16) -> i32 {
+    unsafe { sys::wget_wch(win, wch) }
+}
+
+pub fn wget_wstr(win: WINDOW, buf: &mut [u16]) -> i32 {
+    assert!(buf.len() <= i32::MAX as usize);
+    unsafe { sys::wgetn_wstr(win, buf.as_mut_ptr(), buf.len() as i32) }
+}
+
+#[deprecated = "use `wget_wstr`"]
+pub fn wgetn_wstr(_: WINDOW, _: &mut [u16], _: i32) -> i32 {
+    unimplemented!("use `wget_wstr`")
+}
 
 pub fn whline_set(win: WINDOW, wch: *const cchar_t, n: i32) -> i32 {
     unsafe { sys::whline_set(win, wch, n) }
