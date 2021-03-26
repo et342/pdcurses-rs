@@ -62,3 +62,27 @@ pub fn wgetstr(win: WINDOW) -> Result<GetStr, ()> {
 
     Ok(GetStr::NonUtf(bytes.to_owned()))
 }
+
+#[inline(always)]
+pub fn get_wstr() -> Result<Vec<u16>, ()> {
+    self::wget_wstr(stdscr())
+}
+
+pub fn wget_wstr(win: WINDOW) -> Result<Vec<u16>, ()> {
+    static mut BUF: [u16; BUF_LEN] = [0; BUF_LEN];
+    const  BUF_LEN: usize = 2048;
+
+    if ERR == unsafe { sys::wgetn_wstr(win, BUF.as_mut_ptr(), BUF_LEN as i32) } {
+        return Err(());
+    }
+
+    let len = unsafe {
+        libc::wcslen(BUF.as_ptr())
+    };
+
+    let wcs = unsafe {
+        &BUF[..len]
+    };
+
+    Ok(wcs.to_owned())
+}
