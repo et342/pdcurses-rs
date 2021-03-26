@@ -248,6 +248,8 @@ mod ncurses_compat {
     pub const fn WA_ATTRIBUTES() -> chtype { sys::WA_ATTRIBUTES }
 }
 
+pub mod ext;
+
 /// Handle to a `WINDOW` structure.
 pub type WINDOW = *mut sys::WINDOW;
 /// Handle to a `SCREEN` structure.
