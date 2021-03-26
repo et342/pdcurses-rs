@@ -526,13 +526,17 @@ pub fn getch() -> i32 {
     unsafe { sys::getch() }
 }
 
-// TODO
-// pub fn getnstr(str: *mut c_char, n: i32) -> i32 {
-//     unsafe { sys::getnstr() }
-// }
-// pub fn getstr(str: *mut c_char) -> i32 {
-//     unsafe { sys::getstr() }
-// }
+// FIXME: ncurses_compat
+pub fn getstr(buf: &mut [u8]) -> i32 {
+    self::wgetstr(stdscr(), buf)
+}
+
+// FIXME: ncurses_compat
+// VERCHECK WIDE
+//     n is an amount of wide character to read
+pub fn getnstr(buf: &mut [u8], n: i32) -> i32 {
+    self::wgetnstr(stdscr(), buf, n)
+}
 
 pub fn getwin(filep: *mut FILE) -> WINDOW {
     unsafe { sys::getwin(filep) }
@@ -725,13 +729,10 @@ pub fn mvgetch(y: i32, x: i32) -> i32 {
     unsafe { sys::mvgetch(y, x) }
 }
 
-// TODO
-// pub fn mvgetnstr(y: i32, x: i32, str: *mut c_char, n: i32) -> i32 {
-//     unsafe { sys::mvgetnstr() }
-// }
-// pub fn mvgetstr(y: i32, x: i32, str: *mut c_char) -> i32 {
-//     unsafe { sys::mvgetstr() }
-// }
+// FIXME: ncurses_compat
+pub fn mvgetstr(y: i32, x: i32, buf: &mut [u8]) -> i32 {
+    self::mvwgetstr(stdscr(), y, x, buf)
+}
 
 pub fn mvhline(y: i32, x: i32, ch: chtype, n: i32) -> i32 {
     unsafe { sys::mvhline(y, x, ch, n) }
@@ -813,9 +814,13 @@ pub fn mvwgetch(win: WINDOW, y: i32, x: i32) -> i32 {
     unsafe { sys::mvwgetch(win, y, x) }
 }
 
-// TODO
-// pub fn mvwgetnstr      (win: WINDOW, y: i32, x: i32, str: *mut c_char, n: i32) -> i32;
-// pub fn mvwgetstr       (win: WINDOW, y: i32, x: i32, str: *mut c_char) -> i32;
+// FIXME: ncurses_compat
+pub fn mvwgetstr(win: WINDOW, y: i32, x: i32, buf: &mut [u8]) -> i32 {
+    if sys::ERR == self::wmove(win, y, x) {
+        return sys::ERR;
+    }
+    self::wgetstr(win, buf)
+}
 
 pub fn mvwhline(win: WINDOW, y: i32, x: i32, ch: chtype, n: i32) -> i32 {
     unsafe { sys::mvwhline(win, y, x, ch, n) }
@@ -1276,13 +1281,21 @@ pub fn wgetch(win: WINDOW) -> i32 {
     unsafe { sys::wgetch(win) }
 }
 
-// TODO
-// pub fn wgetnstr(win: WINDOW, s: *mut c_char, n: i32) -> i32 {
-//     unsafe { sys::wgetnstr(win, s, n) }
-// }
-// pub fn wgetstr(win: WINDOW, s: *mut c_char) -> i32 {
-//     unsafe { sys::wgetstr(win, s) }
-// }
+// FIXME: ncurses_compat
+pub fn wgetstr(win: WINDOW, buf: &mut [u8]) -> i32 {
+    self::wgetnstr(win, buf, i32::MAX)
+}
+
+// FIXME: ncurses_compat
+// VERCHECK WIDE
+//     n is an amount of wide character to read
+pub fn wgetnstr(win: WINDOW, buf: &mut [u8], n: i32) -> i32 {
+    let max_wcs = core::cmp::min(
+        buf.len() / 3,
+        if n > 0 { n as usize } else { i32::MAX as usize },
+    );
+    unsafe { sys::wgetnstr(win, buf.as_mut_ptr().cast(), max_wcs as i32) }
+}
 
 pub fn whline(win: WINDOW, ch: chtype, n: i32) -> i32 {
     unsafe { sys::whline(win, ch, n) }
