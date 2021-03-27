@@ -36,7 +36,7 @@ pub fn wgetstr(win: WINDOW) -> Result<GetStr, ()> {
     /*
         VERCHECK 3.9
             if PDC_WIDE is defined
-                wgetnstr reads max(N, MAXLINE=255) of wide characters
+                wgetnstr reads min(N, MAXLINE=255) of wide characters
             otherwise
                 wgetnstr reads N narrow characters
     */
