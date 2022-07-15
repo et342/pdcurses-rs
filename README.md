@@ -57,4 +57,5 @@ fn main() {
 
 This is a thin undocumented wrapper around PDCurses. All the relevant documentation of PDCurses functionality can be found in the `docs` subdirectory of the PDCurses [repo][PDCurses].
 
+[ncurses-rs]: https://github.com/jeaye/ncurses-rs
 [PDCurses]: https://github.com/wmcbrine/PDCurses
