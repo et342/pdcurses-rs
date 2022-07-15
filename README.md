@@ -55,17 +55,6 @@ fn main() {
 
 # Documentation
 
-In the spirit of [ncurses-rs], this is a very thin wrapper around PDCurses, so all the relevant documentation can be found in the `docs` subdirectory of the PDCurses [repo][PDCurses].
+This is a thin undocumented wrapper around PDCurses. All the relevant documentation of PDCurses functionality can be found in the `docs` subdirectory of the PDCurses [repo][PDCurses].
 
-Although this means that this package is not documented, html-based reference documentation can still be built locally by running the following command either in the root of a local checkout of this repo, or in the root of a package that depends on this one:
-
-```
-cargo doc -p pdcurses --no-deps --open
-```
-
-Normally, documentation will be built under the `target/doc/pdcurses` directory and can be accessed at `target/doc/pdcurses/index.html`. <br>
-Flag `--open` will tell cargo to attempt to open generated documentation in a default web-browser.
-
-
-[ncurses-rs]: https://github.com/jeaye/ncurses-rs
 [PDCurses]: https://github.com/wmcbrine/PDCurses
